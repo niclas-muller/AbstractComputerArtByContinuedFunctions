@@ -1,0 +1,19 @@
+.header {
+    background-color: lightpink;
+    padding: 10px;
+    border-color: black;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.upper-header {
+    text-align: center;
+}
+
+.lower-header {
+    background-color: lightyellow;
+    display: flex;
+    justify-content: space-evenly;
+}
