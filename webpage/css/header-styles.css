@@ -13,7 +13,10 @@
 }
 
 .lower-header {
-    background-color: lightyellow;
+    background-color: white;
+    padding: 10px;
+    border: solid;
     display: flex;
     justify-content: space-evenly;
+
 }
