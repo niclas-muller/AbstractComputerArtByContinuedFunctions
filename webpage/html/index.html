@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
     <head>
         <title> Continued Functional Art: Home </title>
         <link rel="stylesheet" href="../css/styles.css">
         <link rel="stylesheet" href="../css/header-styles.css">
+        <link rel="icon" type="image/x-icon" href="../../images/favicons/sample_22.png">
     </head>
+
 
     <body>
         <div class="header">
@@ -31,6 +33,20 @@
                 </ul>
                 Have fun with CFA!
             </p>
+        </div>
+        <hr>
+        <div>
+            <div class="rndImgGen"> 
+                <select name="functionType" id="previewFunctionType"> 
+                    <option value="log of lin"> Log of Lin </option>
+                    <option value="log of sin"> Log of Sin </option>
+                    <option value="log of cube"> Log of Cube </option>
+                </select>
+                <button onclick="getElementById('imagePreview').src = '../../images/samples/sample_'+ Math.floor(20*Math.random())+'.png'"> Click me for random image generation </button>
+            </div>
+            <div class="rndImgGen">
+                <img id="imagePreview" src="../../images/samples/sample_0.png" alt="Preview"> 
+            </div>
         </div>
     </body>
 

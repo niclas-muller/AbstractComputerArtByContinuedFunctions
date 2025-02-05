@@ -3,3 +3,21 @@ body {
     padding: 10px;
     font-family: sans-serif;
 }
+
+a {
+    border: 2px solid black;
+    padding: 4px;
+    background-color: grey;
+    color: white;
+}
+
+a:hover {
+    background-color: white;
+    color: black;
+}
+
+.rndImgGen {
+    text-align: center;
+    padding: 5px;
+    margin: 5px;
+}
