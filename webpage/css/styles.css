@@ -1,23 +1,25 @@
 body {
-    background-color: lightblue;
+    background-color: rgba(200,88,88,0.3);
     padding: 10px;
     font-family: sans-serif;
 }
 
 a {
     border: 2px solid black;
-    padding: 4px;
-    background-color: grey;
+    padding: 9px;
+    background-color: rgba(88,88,200,0.9);
     color: white;
+    border-style: ridge;
 }
 
 a:hover {
     background-color: white;
     color: black;
+    transition: 0.3s;
 }
 
 .rndImgGen {
     text-align: center;
-    padding: 5px;
-    margin: 5px;
+    padding: 10px;
+    font-size: 20px;
 }

@@ -1,7 +1,6 @@
 .header {
-    background-color: lightpink;
+    background-color: rgba(88,88,200,0.3);
     padding: 10px;
-    border-color: black;
     border-radius: 8px;
     display: flex;
     justify-content: center;
@@ -13,9 +12,8 @@
 }
 
 .lower-header {
-    background-color: white;
+    font-size: 20px;
     padding: 10px;
-    border: solid;
     display: flex;
     justify-content: space-evenly;
 }

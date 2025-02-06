@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from shanks import ShanksConverge
+from tqdm import tqdm
 
 class ContinuedFunctionArtFrame():
     # For a given function, center point, extent and resolution, compute the frame
@@ -44,19 +45,29 @@ class ContinuedFunctionArtZoom():
 
 center = (0,0)
 extent = 1
-resolution = 500
+resolution = 300
+for funcType in tqdm(['LogOfCube','LogOfLin','LogOfLog','LogOfSine','LogOfSquare','LogOfRoot']):
+    for _ in range(20):
+        randoms = 2*(np.random.rand(4)-0.5)
+        a = randoms[0] + 1.j*randoms[1]
+        b = randoms[2] + 1.j*randoms[3]
 
-for _ in range(50):
-    randoms = 2*(np.random.rand(4)-0.5)
-    a = randoms[0] + 1.j*randoms[1]
-    b = randoms[2] + 1.j*randoms[3]
-    func = lambda z: np.log(a+b*np.sin(z)/z)
-    frame = ContinuedFunctionArtFrame(func, center, extent, resolution).frame
-    fig, ax = plt.subplots(1)
-    ax.imshow(frame,origin='lower',cmap='twilight')
-    ax.set_xticklabels([])
-    ax.set_yticklabels([])
-    ax.set_xticks([])
-    ax.set_yticks([])
-    fig.savefig(f'../images/favicons/sample_{_}.png', bbox_inches='tight')
-
+        if funcType == 'LogOfCube':
+            func = lambda z: np.log(a+b*z*z*z)
+        if funcType == 'LogOfLin':
+            func = lambda z: np.log(a+b*z)
+        if funcType == 'LogOfLog':
+            func = lambda z: np.log(a+b*np.log(z))
+        if funcType == 'LogOfSine':
+            func = lambda z: np.log(a+b*np.sin(z))
+        if funcType == 'LogOfSquare':
+            func = lambda z: np.log(a+b*z*z)
+        if funcType == 'LogOfRoot':
+            func = lambda z: np.log(a+b*np.sqrt(z))
+            
+        frame = ContinuedFunctionArtFrame(func, center, extent, resolution).frame
+        fig, ax = plt.subplots(1)
+        ax.imshow(frame,origin='lower',cmap='twilight')
+        ax.set_axis_off()
+        fig.savefig(f'../images/samples/{funcType}/sample_{_}.png', bbox_inches='tight',pad_inches=0)
+        fig.close()
