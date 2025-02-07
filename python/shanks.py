@@ -20,17 +20,22 @@ class ShanksConverge():
         self.shanksLadder[0].append(self.function(self.shanksLadder[0][-1]))
         self.totalIterations += 1
 
+    def _shanks(self,tmp):
+        d1 = tmp[2] - tmp[1]
+        d0 = tmp[1] - tmp[0]
+        return tmp[2] - d1*d1/(d1 - d0)
+
     def iterateShanks(self):
         for depth in range(self.shanksLevel):
             tmp = self.shanksLadder[depth][-3:]
-            self.shanksLadder[depth + 1].append((tmp[0]*tmp[2] - tmp[1]*tmp[1])/(tmp[0] + tmp[2] - 2*tmp[1]))
+            self.shanksLadder[depth + 1].append(self._shanks(tmp))
 
     def increaseShanksLevel(self):
         # increase the shanks depth by one level, compute the first element in the deepest level
         self.shanksLadder.append([])
         self.shanksLevel += 1
         tmp = self.shanksLadder[-2][-3:]
-        self.shanksLadder[-1].append((tmp[0]*tmp[2] - tmp[1]*tmp[1])/(tmp[0] + tmp[2] - 2*tmp[1]))
+        self.shanksLadder[-1].append(self._shanks(tmp))
 
     def assessConvergence(self):
         # add the latest approximant to the list of limits and check if convergence has been achieved
