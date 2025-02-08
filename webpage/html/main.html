@@ -16,7 +16,7 @@
         <header>
             <div> <h1> Continued Functional Art </h1> </div>
             <div>
-                <a href="index.html"> Home </a>
+                <a href="main.html"> Home </a>
                 <a href="gallery.html"> Gallery </a>
                 <a href="theory.html"> Theory </a>
                 <a href="createYourOwnArt.html"> Create your own art </a>
@@ -37,24 +37,26 @@
                     <li> All the tools you need to start playing around and creating your own art </li>
                 </ul>
            </p>
-                <p> Have fun with CFA! As an appetizer, find some samples below by choosing a function class and clicking on the button. </p>
+                <p> Have fun with CFA! As an appetizer, find some samples below by choosing a function class and clicking on the image. </p>
 
         <hr/>
-        <div>
-        <select name="functionType" id="previewFunctionType"> 
-            <option value="LogOfLin"> Log of Lin </option>
-            <option value="LogOfSquare"> Log of Square </option>
-            <option value="LogOfCube"> Log of Cube </option>
-            <option value="LogOfRoot"> Log of Root </option>
-            <option value="LogOfSine"> Log of Sine </option>
-            <option value="LogOfLog"> Log of Log </option>
-        </select>
-
-        <button onclick="loadRandomPreview()"> Click for random image display </button>
+        <div id="previewFunctionSelectContainer">
+            <select name="functionType" id="previewFunctionSelect"> 
+                <option value="LogOfLin"> Log of Lin </option>
+                <option value="LogOfSquare"> Log of Square </option>
+                <option value="LogOfCube"> Log of Cube </option>
+                <option value="LogOfRoot"> Log of Root </option>
+                <option value="LogOfSine"> Log of Sine </option>
+                <option value="LogOfLog"> Log of Log </option>
+            </select>
+            <span id="previewFunctionSelectTooltip"> The class of functions from which the image is created </span>
         </div>
-        <figure>
-            <img id="imagePreview" src="../../images/samples/LogOfLin/sample_0.png" alt="Preview"> 
-        </figure>
+
+        <div>
+        <button onclick="loadRandomPreview()"> 
+            <img id="imagePreview" src="../../images/samples/LogOfLin/sample_11.png" alt="Preview"> 
+        </button>
+        </div>
 
         </section>
 

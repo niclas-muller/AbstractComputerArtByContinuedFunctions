@@ -1,12 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from shanks import ShanksConverge
+from funcGen import FuncGen 
 from tqdm import tqdm
 
 class ContinuedFunctionArtFrame():
     # For a given function, center point, extent and resolution, compute the frame
     def __init__(self, function, center, extent, resolution, grid=None):
-        self.function = function
+        self.function = FuncGen(function).func
         if grid:
             self.grid = grid
         else:
