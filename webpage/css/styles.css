@@ -1,76 +1,63 @@
 body {
-    font-family: "Courier New", "Courier", "monospace";
-    background-color: rgba(255,253,208,0.1);
-    font-size: 1.3vw;
-    margin-left: 30px;
-    margin-right: 30px;
+    font-family: "Courier New";
+    background-color: rgba(209,182,210);
+    font-size: 1rem;
+    width: 100%;
 }
 
-header {
-    background-color: rgb(255,253,208);
-    padding: 10px;
-    text-align: center;
-    border-radius: 10px;
-}
-
-h1 {
-    padding: 6px;
-}
-
-a {
-    font-weight: bold;
-    text-decoration: none;
-    margin-left: 20px;
-    margin-right: 20px;
-    padding-left: 10px;
-    padding-right: 10px;
-    border: solid;
-    border-radius: 4px;
-}
-
-a:hover {
-    background-color: grey;
+header, footer {
+    background-color: rgb(95,93,121);
     color: white;
-    transition: 0.3s;
-}
-
-p {
-    padding: 10px;
-}
-
-div {
     text-align: center;
+    padding-bottom: 1rem;
+}
+
+#globContainer {
+    width: 800px;
+    margin: 0 auto;
+}
+
+h1, h2 {
+    font-family: "Helvetica";
+    padding: 0.5rem;
+}
+
+.headerBtn {
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem;
+    border: solid;
+    border-radius: 4rem;
+}
+
+.headerBtn:hover {
+    background-color: rgb(245,165,36);
+    color: black;
+    transition: 0.5s;
+}
+
+#headerNavDiv {
+    display: flex;
+    justify-content: space-evenly;
 }
 
 img {
-    width: 100%;
+    width: 80%;
     height: auto;
 }
 
-button {
+#cycleThroughSamples {
+    background-color: rgba(209,182,210);
     padding: 0;
     margin: 0;
     border: none;
     cursor: pointer; 
 }
 
-#previewFunctionSelectContainer {
-    text-align: left;
-    position: relative;
-}
-
-#previewFunctionSelectContainer #previewFunctionSelectTooltip {
-    visibility: hidden;
-    width: 10em;
-    background-color: black;
-    color: white;
+#previewImage {
+    margin-top: 2rem;
     text-align: center;
-    padding: 5px 0;
-    border-radius: 6px;
-    position: absolute;
-    z-index: 1;
-}
-
-#previewFunctionSelectContainer:hover #previewFunctionSelectTooltip {
-    visibility: visible;
+    display: flex;
+    flex-direction: column;
 }

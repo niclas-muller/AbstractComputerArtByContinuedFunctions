@@ -39,15 +39,15 @@ class ShanksConverge():
 
     def assessConvergence(self):
         # add the latest approximant to the list of limits and check if convergence has been achieved
-        self.bestEstimates.append(self.shanksLadder[-1][-1])
-        if len(self.bestEstimates) < 3:
-            pass
-        else:
+        try:
+            self.bestEstimates.append(self.shanksLadder[-1][-1])
             diff1 = abs(self.bestEstimates[-1] - self.bestEstimates[-2])
             diff2 = abs(self.bestEstimates[-2] - self.bestEstimates[-3])
             if diff1 < self.convergenceThreshold and diff2 < self.convergenceThreshold:
                 self.isConverged = True
                 self.limit = self.bestEstimates[-1]
+        except IndexError:
+            pass
 
     def iterate(self):
         while not self.isConverged and self.totalIterations < self.maxIterations:

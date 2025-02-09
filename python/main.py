@@ -7,7 +7,8 @@ from tqdm import tqdm
 class ContinuedFunctionArtFrame():
     # For a given function, center point, extent and resolution, compute the frame
     def __init__(self, function, center, extent, resolution, grid=None):
-        self.function = FuncGen(function).func
+        #self.function = FuncGen(function).func
+        self.function = function
         if grid:
             self.grid = grid
         else:
@@ -18,11 +19,9 @@ class ContinuedFunctionArtFrame():
         lowerLeftCorner = (center[0] - 0.5*extent, center[1] - 0.5*extent)
         upperRghtCorner = (center[0] + 0.5*extent, center[1] + 0.5*extent)
         xGrid = np.linspace(lowerLeftCorner[0], upperRghtCorner[0], num=resolution)
-        yGrid = np.linspace(lowerLeftCorner[1], upperRghtCorner[1], num=resolution)
-        self.grid = np.empty((resolution, resolution), dtype = np.complex128)
-        for xCount, x in enumerate(xGrid):
-            for yCount, y in enumerate(yGrid):
-                self.grid[xCount,yCount] = x + 1.j*y
+        yGrid = np.linspace(upperRghtCorner[1], lowerLeftCorner[1], num=resolution)
+        X, Y = np.meshgrid(xGrid, yGrid)
+        self.grid = X + 1.j*Y
 
     def computeFrame(self):
         
@@ -43,10 +42,11 @@ class ContinuedFunctionArtWalk():
 class ContinuedFunctionArtZoom():
     def __init__(self):
         pass
+'''
 
-center = (0,0)
+center = (-1,2)
 extent = 1
-resolution = 300
+resolution = 3
 for funcType in tqdm(['LogOfCube','LogOfLin','LogOfLog','LogOfSine','LogOfSquare','LogOfRoot']):
     for _ in range(20):
         randoms = 2*(np.random.rand(4)-0.5)
@@ -72,3 +72,4 @@ for funcType in tqdm(['LogOfCube','LogOfLin','LogOfLog','LogOfSine','LogOfSquare
         ax.set_axis_off()
         fig.savefig(f'../images/samples/{funcType}/sample_{_}.png', bbox_inches='tight',pad_inches=0)
         fig.close()
+'''

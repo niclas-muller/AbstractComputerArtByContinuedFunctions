@@ -5,42 +5,32 @@
         <title> Continued Functional Art: Home </title>
         <link rel="stylesheet" href="../css/styles.css"/>
         <link rel="icon" type="image/x-icon" href="../../images/favicons/sample_22.png"/>
-        <script src="../js/jsCode.js"></script>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
 
-
     <body>
+        <div id="globContainer">
 
-        <header>
-            <div> <h1> Continued Functional Art </h1> </div>
-            <div>
-                <a href="main.html"> Home </a>
-                <a href="gallery.html"> Gallery </a>
-                <a href="theory.html"> Theory </a>
-                <a href="createYourOwnArt.html"> Create your own art </a>
-            </div>
-        </header>
-
-        <section> 
-
+            <!-- header is inserted here via the js script at the end of the body -->
             <p> 
-            Welcome to this website on <em> art through continued functions. </em> <br> 
-            By applying functions over and over again to a subset of the complex plane one can generate images by displaying the angle or radius of the limiting value (given that this exists). The resulting images can exhibit everything from rather simple, two color shapes to highly complex, fractal-like structures. Since the base function that generates the images is highly customizable, there is a nearly endless room of possibilities. It feels almost like exploring unknown continents, never previously seen by man! 
-        </p>
+              Welcome to <em> Abstract Computer Art by Continued Functions</em>. Using simple maths I create abstract artworks and want to give you the chance to do it too. Go directly to the <em> Create </em> page to start art-working. 
+            </p>
             <p>
-            This website provides
-                <ul>
-                    <li> A sample gallery of pictures and gifs </li>
-                    <li> A section on the theory and numerics behind the calculations </li>
-                    <li> All the tools you need to start playing around and creating your own art </li>
-                </ul>
-           </p>
-                <p> Have fun with CFA! As an appetizer, find some samples below by choosing a function class and clicking on the image. </p>
+              Click on the image below to see a selected few- or visit the <em> Gallery </em> to see even more examples. Click on the <em> Theory </em> tab to find out what's behind it. 
+            </p>
 
-        <hr/>
-        <div id="previewFunctionSelectContainer">
+            <p>
+              In any case, have fun exploring! 
+            </p>
+
+            <hr/>
+
+        <div id="previewImage">
+            <button id="cycleThroughSamples" onclick="loadRandomPreview()"> 
+                <img id="imagePreview" src="../../images/samples/LogOfLin/sample_11.png" alt="Preview"> 
+            </button>
+
             <select name="functionType" id="previewFunctionSelect"> 
                 <option value="LogOfLin"> Log of Lin </option>
                 <option value="LogOfSquare"> Log of Square </option>
@@ -49,18 +39,12 @@
                 <option value="LogOfSine"> Log of Sine </option>
                 <option value="LogOfLog"> Log of Log </option>
             </select>
-            <span id="previewFunctionSelectTooltip"> The class of functions from which the image is created </span>
+
         </div>
 
-        <div>
-        <button onclick="loadRandomPreview()"> 
-            <img id="imagePreview" src="../../images/samples/LogOfLin/sample_11.png" alt="Preview"> 
-        </button>
         </div>
 
-        </section>
-
-        <footer> This will become a footer. </footer>
+        <script src="../js/jsCode.js"></script>
     </body>
 
 </html>
