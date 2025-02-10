@@ -2,17 +2,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 from shanks import ShanksConverge
 from funcGen import FuncGen 
+from lib import getRandomFunction
+from colorScheme import getColorMap
 from tqdm import tqdm
+import time
+import warnings
+warnings.filterwarnings('ignore')
 
 class ContinuedFunctionArtFrame():
     # For a given function, center point, extent and resolution, compute the frame
-    def __init__(self, function, center, extent, resolution, grid=None):
-        #self.function = FuncGen(function).func
-        self.function = function
-        if grid:
-            self.grid = grid
-        else:
-            self.constructGrid(center, extent, resolution)
+    def __init__(self, function, center, extent, resolution):
+        self.function = FuncGen(function).func
+        self.constructGrid(center, extent, resolution)
         self.computeFrame()
 
     def constructGrid(self, center, extent, resolution):
@@ -42,34 +43,31 @@ class ContinuedFunctionArtWalk():
 class ContinuedFunctionArtZoom():
     def __init__(self):
         pass
-'''
 
-center = (-1,2)
-extent = 1
-resolution = 3
-for funcType in tqdm(['LogOfCube','LogOfLin','LogOfLog','LogOfSine','LogOfSquare','LogOfRoot']):
-    for _ in range(20):
-        randoms = 2*(np.random.rand(4)-0.5)
-        a = randoms[0] + 1.j*randoms[1]
-        b = randoms[2] + 1.j*randoms[3]
-
-        if funcType == 'LogOfCube':
-            func = lambda z: np.log(a+b*z*z*z)
-        if funcType == 'LogOfLin':
-            func = lambda z: np.log(a+b*z)
-        if funcType == 'LogOfLog':
-            func = lambda z: np.log(a+b*np.log(z))
-        if funcType == 'LogOfSine':
-            func = lambda z: np.log(a+b*np.sin(z))
-        if funcType == 'LogOfSquare':
-            func = lambda z: np.log(a+b*z*z)
-        if funcType == 'LogOfRoot':
-            func = lambda z: np.log(a+b*np.sqrt(z))
-            
-        frame = ContinuedFunctionArtFrame(func, center, extent, resolution).frame
+def fillBestOfDir():
+    cmap = getColorMap()
+    path = '../images/bestOf/'
+    center = (0,0)
+    extent = 1
+    resolution = 100
+    for _ in tqdm(range(30)):
+        #fname = f'frame_{str(time.ctime()).replace(' ','_')}_.png'
+        fname = f'sample_{_}.png'
+        function = getRandomFunction(np.random.randint(3,20))
+        frame = ContinuedFunctionArtFrame(function, center, extent, resolution).frame
         fig, ax = plt.subplots(1)
-        ax.imshow(frame,origin='lower',cmap='twilight')
+        ax.imshow(frame,
+                  cmap = cmap,
+                  norm = 'linear',
+                  vmin = -np.pi,
+                  vmax = np.pi,
+                  interpolation = 'lanczos',
+                  origin='lower')
         ax.set_axis_off()
-        fig.savefig(f'../images/samples/{funcType}/sample_{_}.png', bbox_inches='tight',pad_inches=0)
-        fig.close()
-'''
+        fig.savefig(f'{path}{fname}',
+                    bbox_inches = 'tight',
+                    pad_inches = 0,
+                    metadata = {'Comment': function})
+        plt.close(fig)
+
+fillBestOfDir()

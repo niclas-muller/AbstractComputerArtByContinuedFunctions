@@ -11,7 +11,6 @@ class FuncGen():
                 - pow: raise to power (needs to be passed)
                 - log: compute natural log
                 - sin: compute sin
-                - exp: compute exponential
 
             Example: in order to encode the function sin(log(c0 + c1*sqrt(z))) we write:
             seq = 'pow:0.5_mul:c1_add:c0_log_sin', so functional elements are separated by
@@ -22,30 +21,33 @@ class FuncGen():
         self.constructFunc()
 
     def constructFunc(self):
-        funcPlan = []
-        for _funcElem in self.seq.split('_'):
-            funcElem = _funcElem.split(':')
+
+        def createFuncAtom(funcElem):
+            funcElem = funcElem.split(':')
             if len(funcElem) == 2:
                 param = np.complex128(funcElem[1])
             match funcElem[0]:
                 case 'mul':
-                    funcPlan.append(lambda x: x*param)
+                    return (lambda x: x*param)
                 case 'add':
-                    funcPlan.append(lambda x: x + param)
+                    return (lambda x: x + param)
                 case 'pow':
-                    funcPlan.append(lambda x: x**param)
+                    return (lambda x: x**param)
                 case 'log':
-                    funcPlan.append(lambda x: np.log(x))
+                    return (lambda x: np.log(x))
                 case 'sin':
-                    funcPlan.append(lambda x: np.sin(x))
-                case 'exp':
-                    funcPlan.append(lambda x: np.exp(x))
+                    return (lambda x: np.sin(x))
                 case _:
                     raise NameError(f'Undefined function atom {funcElem}')
 
-        def chainedFunc(x):
-            for funcAtom in funcPlan:
-                x = funcAtom(x)
-            return x
+        funcPlan = []
+        for funcElem in self.seq.split('_'):
+            funcPlan.append(createFuncAtom(funcElem))
+
+        def chainedFunc(t):
+            t += 0.j
+            for f in funcPlan:
+                t = f(t)
+            return t
 
         self.func = chainedFunc

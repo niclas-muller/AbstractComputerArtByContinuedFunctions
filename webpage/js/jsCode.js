@@ -1,8 +1,7 @@
 /* functionality behind changing the preview image on the landing page */
 function loadRandomPreview() {
-    let rnd = Math.floor(20*Math.random());
-    let functionType = document.getElementById("previewFunctionSelect").value;
-    let path = "../../images/samples/" + functionType + "/sample_" + rnd + ".png";
+    let rnd = Math.floor(30*Math.random());
+    let path = "../../images/bestOf/sample_" + rnd + ".png";
     document.getElementById("imagePreview").src = path;
 }
 
@@ -13,10 +12,10 @@ function createHeader() {
     document.body.insertBefore(headerObj, document.body.firstChild)
     document.getElementById("cmnHeader").innerHTML = "<h1> Abstract Computer Art by Continued Functions </h1>";
     document.getElementById("cmnHeader").innerHTML += "<div id = 'headerNavDiv'></div>";
-    document.getElementById("headerNavDiv").innerHTML += "<a class='headerBtn' href='main.html'> Home </a>";
-    document.getElementById("headerNavDiv").innerHTML += "<a class='headerBtn' href='gallery.html'> Gallery </a>";
-    document.getElementById("headerNavDiv").innerHTML += "<a class='headerBtn' href='theory.html'> Theory </a>";
-    document.getElementById("headerNavDiv").innerHTML += "<a class='headerBtn' href='create.html'> Create </a>";
+    document.getElementById("headerNavDiv").innerHTML += "<a class='headerBtn' href='main.html'> <i class='bi bi-house'></i> Home </a>";
+    document.getElementById("headerNavDiv").innerHTML += "<a class='headerBtn' href='gallery.html'> <i class='bi bi-collection'></i> Gallery </a>";
+    document.getElementById("headerNavDiv").innerHTML += "<a class='headerBtn' href='theory.html'> <i class='bi bi-eyeglasses'></i> Theory </a>";
+    document.getElementById("headerNavDiv").innerHTML += "<a class='headerBtn' href='create.html'> <i class='bi bi-brush'></i> Create </a>";
 }
 
 createHeader();
