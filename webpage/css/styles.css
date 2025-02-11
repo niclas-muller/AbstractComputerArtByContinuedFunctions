@@ -1,7 +1,6 @@
 body {
     font-family: "Courier New";
     background-color: rgba(209,182,210);
-    font-size: 1rem;
     width: 100%;
 }
 
@@ -13,8 +12,8 @@ header, footer {
 }
 
 #globContainer {
-    width: 800px;
-    margin: 0 auto;
+    max-width: 800px;
+    margin: auto;
 }
 
 h1, h2 {
