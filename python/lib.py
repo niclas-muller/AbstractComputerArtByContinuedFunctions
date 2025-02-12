@@ -173,7 +173,8 @@ class Frame():
             if shnks.isConverged:
                 return np.angle(shnks.limit)
             else: 
-                return np.nan
+                # implement option to show nan instead?
+                return np.angle(shnks.bestEstimates[-1])
 
         vectorizedApply = np.vectorize(applyContinuedFunction)
         self.frame = vectorizedApply(self.grid)

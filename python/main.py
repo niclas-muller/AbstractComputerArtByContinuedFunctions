@@ -1,6 +1,7 @@
 from lib import *
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+import os
 
 class Draw():
 
@@ -18,11 +19,13 @@ class Draw():
 
     def drawBestOf(self,args):
         path = '../images/bestOf/'
+        existingFiles = os.listdir(path)
+        maxFileIndex = max([int(fname.split('_')[1].split('.')[0]) for fname in existingFiles]) 
         center = (0,0)
         extent = 2
         resolution = 500
 
-        for _ in tqdm(range(100)):
+        for _ in tqdm(range(maxFileIndex + 1,maxFileIndex + 100)):
             fname = f'sample_{_}.png'
             function = encodeRandomFunction(np.random.randint(3,20))
             frame = Frame(function, center, extent, resolution).frame
