@@ -1,7 +1,10 @@
 import random
 import numpy as np
 import matplotlib.colors as col
+import pandas as pd
 import time
+import os
+import subprocess
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -187,3 +190,80 @@ def getColorMap(right = '#C96868', up = '#FADFA1', left = '#FFF4EA', down = '#7E
 
     colors = [left,down,right,up,left]
     return col.LinearSegmentedColormap.from_list('myMap',colors,N=256,gamma=1.0)
+
+def createNewBestOfDir():
+    runCount = 0
+    path = f'../images/bestOf_{runCount}/'
+    while os.path.exists(path):
+        runCount += 1
+        path = f'../images/bestOf_{runCount}/'
+    os.makedirs(path)
+    return path
+
+def cleanUpBestOfDir(path):
+    # load frame metadata
+    bestOfCount = path.split("_")[1]
+    bestOfPath = path
+    paths = [bestOfPath+fname for fname in os.listdir(bestOfPath) if '.png' in fname]
+    frameInfo = []
+    for path in paths:
+        rawInfo = subprocess.check_output(['identify', '-verbose', path])
+        rawInfo = str(rawInfo)
+        rawInfo = rawInfo.replace(' ','')
+        rawInfo = rawInfo.split('\\n')
+        rawInfo = [{e.split(':')[0]: ':'.join(e.split(':')[1:])} for e in rawInfo if e != "'"]
+        info = {}
+        for d in rawInfo:
+            info.update(d)
+        frameInfo.append(info)
+
+    # process metadata
+    frameInfo = pd.DataFrame(frameInfo)
+    relevantColumns = ['min','standarddeviation','kurtosis','entropy','Colors','Comment','filename','Filesize','Pixelspersecond']
+    frameInfo = frameInfo[relevantColumns]
+    frameInfo = frameInfo.set_index('filename')
+
+    # fix dtypes:
+    for col in ['min', 'standarddeviation']:
+        frameInfo[col] = frameInfo.apply(lambda row: float(row[col].replace(')','').split('(')[1]), axis=1)
+
+    for col in ['kurtosis', 'entropy']:
+        frameInfo[col] = frameInfo[col].astype('float')
+
+    frameInfo.Colors = frameInfo.Colors.astype(int)
+    frameInfo.Filesize = frameInfo.apply(lambda row: int(row['Filesize'].replace('B','')), axis=1)
+    frameInfo.Pixelspersecond = frameInfo.apply(lambda row: float(row['Pixelspersecond'].replace('MB','')), axis=1)
+
+    # compute ranks
+    for kpi, order in [('min',True),
+                       ('standarddeviation',False),
+                       ('kurtosis',True),
+                       ('entropy',False),
+                       ('Colors',False),
+                       ('Filesize',False),
+                       ('Pixelspersecond',True)]:
+        frameInfo[f'{kpi}_rank'] = frameInfo[kpi].rank(ascending=order)
+    frameInfo['tot_rank'] = frameInfo[[col for col in frameInfo.columns if 'rank' in col]].sum(axis=1)
+    frameInfo.tot_rank = frameInfo.tot_rank.rank()
+    frameInfo = frameInfo.sort_values(by='tot_rank')
+    #frameInfo.to_excel(f'FrameOverview_{bestOfCount}.xlsx')
+
+    # move non-top-30 into new folder (olds) and rename top-30s
+
+    longtailPath = bestOfPath+'longtail'
+    if not os.path.exists(longtailPath):
+        os.makedirs(longtailPath)
+
+    numberOfExamples = 30
+    toBeMoved = frameInfo.query('tot_rank > @numberOfExamples').index
+    for path in toBeMoved.tolist():
+        os.rename(path,path.replace(f'bestOf_{bestOfCount}',f'bestOf_{bestOfCount}/longtail/'))
+
+    toBeRenamed = frameInfo.query('tot_rank <= @numberOfExamples')
+    for index, row in toBeRenamed.iterrows():
+        tmpPath = f'{bestOfPath}tmp_{int(row["tot_rank"])}.png'
+        os.rename(index,tmpPath)
+
+    paths = [bestOfPath+fname for fname in os.listdir(bestOfPath) if '.png' in fname]
+    for path in paths:
+        os.rename(path,path.replace('tmp','sample'))

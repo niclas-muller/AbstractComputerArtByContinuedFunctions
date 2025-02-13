@@ -18,16 +18,17 @@ class Draw():
                 raise NameError(f'Unknown mode {mode}')
 
     def drawBestOf(self,args):
-        path = '../images/bestOf/'
-        existingFiles = os.listdir(path)
-        maxFileIndex = max([int(fname.split('_')[1].split('.')[0]) for fname in existingFiles]) 
+        path = createNewBestOfDir()
         center = (0,0)
-        extent = 2
-        resolution = 500
+        extent = 1
+        resolution = 30
+        numberOfExamples = 100
+        minFuncAtoms = 60
+        maxFuncAtoms = 70
 
-        for _ in tqdm(range(maxFileIndex + 1,maxFileIndex + 100)):
+        for _ in tqdm(range(numberOfExamples)):
             fname = f'sample_{_}.png'
-            function = encodeRandomFunction(np.random.randint(3,20))
+            function = encodeRandomFunction(np.random.randint(minFuncAtoms,maxFuncAtoms))
             frame = Frame(function, center, extent, resolution).frame
             fig, ax = plt.subplots(1)
             ax.imshow(frame,
@@ -43,5 +44,7 @@ class Draw():
                         pad_inches = 0,
                         metadata = {'Comment': function})
             plt.close(fig)
+
+        cleanUpBestOfDir(path)
 
 Draw('bestOf',{'param1': 1, 'param_2': 2})

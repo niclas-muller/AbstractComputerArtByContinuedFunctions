@@ -31,8 +31,8 @@ fillHtmlHead();
 
 /* functionality behind changing the preview image on the landing page */
 function loadRandomPreview() {
-    let rnd = Math.floor(30*Math.random());
-    let path = "../../images/bestOf/sample_" + rnd + ".png";
+    let rnd = Math.floor(30*Math.random()) + 1;
+    let path = "../../images/bestOf/frame_" + rnd + ".png";
     document.getElementById("imagePreview").src = path;
 }
 
