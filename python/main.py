@@ -9,24 +9,46 @@ class Draw():
         Overall class for drawing art: be it single frames, walks, zooms, etc.
     '''
 
-    def __init__(self,mode,*args):
-        self.cmap = getColorMap()
+    def __init__(self,
+                 mode,
+                 center,
+                 extent,
+                 resolution,
+                 minFuncAtoms,
+                 maxFuncAtoms,
+                 numberOfSamples = 100,
+                 numberOfTops = 30,
+                 colors=None):
+
+        if colors:
+            self.cmap = getColorMap(colors)
+        else:
+            self.cmap = getColorMap()
+
         match mode:
             case 'bestOf':
-                self.drawBestOf(args)
+                self.drawBestOf(center,
+                                extent,
+                                resolution,
+                                numberOfSamples,
+                                minFuncAtoms,
+                                maxFuncAtoms,
+                                numberOfTops)
             case _:
                 raise NameError(f'Unknown mode {mode}')
 
-    def drawBestOf(self,args):
-        path = createNewBestOfDir()
-        center = (0,0)
-        extent = 1
-        resolution = 30
-        numberOfExamples = 100
-        minFuncAtoms = 60
-        maxFuncAtoms = 70
+    def drawBestOf(self,
+                   center,
+                   extent,
+                   resolution,
+                   numberOfSamples,
+                   minFuncAtoms,
+                   maxFuncAtoms,
+                   numberOfTops):
 
-        for _ in tqdm(range(numberOfExamples)):
+        path = createNewBestOfDir()
+
+        for _ in tqdm(range(numberOfSamples)):
             fname = f'sample_{_}.png'
             function = encodeRandomFunction(np.random.randint(minFuncAtoms,maxFuncAtoms))
             frame = Frame(function, center, extent, resolution).frame
@@ -45,6 +67,12 @@ class Draw():
                         metadata = {'Comment': function})
             plt.close(fig)
 
-        cleanUpBestOfDir(path)
+        cleanUpBestOfDir(path,numberOfTops)
 
-Draw('bestOf',{'param1': 1, 'param_2': 2})
+center = (0,0)
+extent = 2
+resolution = 200
+minFuncAtoms = 2
+maxFuncAtoms = 10
+
+Draw('bestOf',center,extent,resolution,minFuncAtoms,maxFuncAtoms)

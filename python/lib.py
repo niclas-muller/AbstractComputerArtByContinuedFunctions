@@ -15,8 +15,8 @@ def encodeRandomFunction(numOfFuncAtoms, rndParamRange=1):
         a function that can be interpreted by decodeFunction
     '''
 
-    listOfFuncAtoms = ['add', 'mul', 'pow', 'log', 'sin']
-    listOfParamfulFuncAtoms = ['add', 'mul', 'pow']
+    listOfFuncAtoms = ['add', 'mul', 'pow', 'log', 'sin', 'tan', 'sinc', 'conj', 'mulx']
+    listOfParamfulFuncAtoms = ['add', 'mul', 'pow', 'mulx']
 
     encodedFunc = ''
     for funcAtomCount in range(numOfFuncAtoms):
@@ -42,15 +42,23 @@ def createFuncAtom(funcElem):
         param = np.complex128(funcElem[1])
     match funcElem[0]:
         case 'mul':
-            return (lambda x: x*param)
+            return (lambda x: np.multiply(x,param))
         case 'add':
-            return (lambda x: x + param)
+            return (lambda x: np.add(x,param))
         case 'pow':
-            return (lambda x: x**param)
+            return (lambda x: np.power(x,param))
         case 'log':
             return (lambda x: np.log(x))
         case 'sin':
             return (lambda x: np.sin(x))
+        case 'tan':
+            return (lambda x: np.tan(x))
+        case 'sinc':
+            return (lambda x: np.sinc(x))
+        case 'conj':
+            return (lambda x: np.conjugate(x))
+        case 'mulx':
+            return (lambda x: np.multiply(x,np.power(x,param)))
         case _:
             raise NameError(f'Undefined function atom {funcElem}')
 
@@ -182,12 +190,9 @@ class Frame():
         vectorizedApply = np.vectorize(applyContinuedFunction)
         self.frame = vectorizedApply(self.grid)
 
-def getColorMap(right = '#C96868', up = '#FADFA1', left = '#FFF4EA', down = '#7EACB5'):
-
-    '''
-        Given four colors, create a cyclic colormap and return it
-    '''
-
+def getColorMap(colors=('#C96868','#FADFA1','#FFF4EA','#7EACB5')):
+    #Given four colors, create a cyclic colormap and return it
+    right, up, left, down = colors
     colors = [left,down,right,up,left]
     return col.LinearSegmentedColormap.from_list('myMap',colors,N=256,gamma=1.0)
 
@@ -200,39 +205,38 @@ def createNewBestOfDir():
     os.makedirs(path)
     return path
 
-def cleanUpBestOfDir(path):
-    # load frame metadata
-    bestOfCount = path.split("_")[1]
-    bestOfPath = path
-    paths = [bestOfPath+fname for fname in os.listdir(bestOfPath) if '.png' in fname]
-    frameInfo = []
-    for path in paths:
-        rawInfo = subprocess.check_output(['identify', '-verbose', path])
+def cleanUpBestOfDir(path,numberOfTops):
+    # load metadata of frames
+    bestOfCount = path.split("_")[1][:-1]
+    paths = [path + fname for fname in os.listdir(path) if '.png' in fname]
+    df = []
+    for p in paths:
+        rawInfo = subprocess.check_output(['identify', '-verbose', p])
         rawInfo = str(rawInfo)
         rawInfo = rawInfo.replace(' ','')
         rawInfo = rawInfo.split('\\n')
-        rawInfo = [{e.split(':')[0]: ':'.join(e.split(':')[1:])} for e in rawInfo if e != "'"]
+        rawInfo = [{e.split(':')[0]: ':'.join(e.split(':')[1:])} for e in rawInfo if len(e.split(':')) > 1]
         info = {}
         for d in rawInfo:
             info.update(d)
-        frameInfo.append(info)
+        df.append(info)
+    df = pd.DataFrame(df)
 
     # process metadata
-    frameInfo = pd.DataFrame(frameInfo)
     relevantColumns = ['min','standarddeviation','kurtosis','entropy','Colors','Comment','filename','Filesize','Pixelspersecond']
-    frameInfo = frameInfo[relevantColumns]
-    frameInfo = frameInfo.set_index('filename')
+    df = df[relevantColumns]
+    df = df.set_index('filename')
 
     # fix dtypes:
     for col in ['min', 'standarddeviation']:
-        frameInfo[col] = frameInfo.apply(lambda row: float(row[col].replace(')','').split('(')[1]), axis=1)
+        df[col] = df.apply(lambda row: float(row[col].replace(')','').split('(')[1]), axis=1)
 
     for col in ['kurtosis', 'entropy']:
-        frameInfo[col] = frameInfo[col].astype('float')
+        df[col] = df[col].astype('float')
 
-    frameInfo.Colors = frameInfo.Colors.astype(int)
-    frameInfo.Filesize = frameInfo.apply(lambda row: int(row['Filesize'].replace('B','')), axis=1)
-    frameInfo.Pixelspersecond = frameInfo.apply(lambda row: float(row['Pixelspersecond'].replace('MB','')), axis=1)
+    df.Colors = df.Colors.astype(int)
+    df.Filesize = df.apply(lambda row: int(row['Filesize'].replace('B','')), axis=1)
+    df.Pixelspersecond = df.apply(lambda row: float(row['Pixelspersecond'].replace('MB','')), axis=1)
 
     # compute ranks
     for kpi, order in [('min',True),
@@ -242,28 +246,26 @@ def cleanUpBestOfDir(path):
                        ('Colors',False),
                        ('Filesize',False),
                        ('Pixelspersecond',True)]:
-        frameInfo[f'{kpi}_rank'] = frameInfo[kpi].rank(ascending=order)
-    frameInfo['tot_rank'] = frameInfo[[col for col in frameInfo.columns if 'rank' in col]].sum(axis=1)
-    frameInfo.tot_rank = frameInfo.tot_rank.rank()
-    frameInfo = frameInfo.sort_values(by='tot_rank')
-    #frameInfo.to_excel(f'FrameOverview_{bestOfCount}.xlsx')
+        df[f'{kpi}_rank'] = df[kpi].rank(ascending=order)
+    df['tot_rank'] = df[[col for col in df.columns if 'rank' in col]].sum(axis=1)
+    df.tot_rank = df.tot_rank.rank(method='first')
+    df = df.sort_values(by='tot_rank')
+    df.to_excel(f'FrameOverview_{bestOfCount}.xlsx')
 
     # move non-top-30 into new folder (olds) and rename top-30s
-
-    longtailPath = bestOfPath+'longtail'
+    longtailPath = path+'longtail'
     if not os.path.exists(longtailPath):
         os.makedirs(longtailPath)
 
-    numberOfExamples = 30
-    toBeMoved = frameInfo.query('tot_rank > @numberOfExamples').index
-    for path in toBeMoved.tolist():
-        os.rename(path,path.replace(f'bestOf_{bestOfCount}',f'bestOf_{bestOfCount}/longtail/'))
+    toBeMoved = df.query('tot_rank > @numberOfTops').index
+    for p in toBeMoved.tolist():
+        os.rename(p,p.replace(f'bestOf_{bestOfCount}',f'bestOf_{bestOfCount}/longtail/'))
 
-    toBeRenamed = frameInfo.query('tot_rank <= @numberOfExamples')
+    toBeRenamed = df.query('tot_rank <= @numberOfTops')
     for index, row in toBeRenamed.iterrows():
-        tmpPath = f'{bestOfPath}tmp_{int(row["tot_rank"])}.png'
+        tmpPath = f'{path}tmp_{int(row["tot_rank"])}.png'
         os.rename(index,tmpPath)
 
-    paths = [bestOfPath+fname for fname in os.listdir(bestOfPath) if '.png' in fname]
-    for path in paths:
-        os.rename(path,path.replace('tmp','sample'))
+    paths = [path+fname for fname in os.listdir(path) if '.png' in fname]
+    for p in paths:
+        os.rename(p,p.replace('tmp','sample'))
