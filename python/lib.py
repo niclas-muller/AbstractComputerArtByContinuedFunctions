@@ -1,6 +1,7 @@
 import random
 import numpy as np
 import matplotlib.colors as col
+import matplotlib.pyplot as plt
 import pandas as pd
 import time
 import os
@@ -107,6 +108,7 @@ class ShanksConverge():
         self.iterateBase()
         self.shanksLevel = 0
         self.isConverged = False
+        self.limit = np.nan
         self.maxIterations = 50
         self.convergenceThreshold = 1e-3
         self.bestEstimates = []
@@ -196,9 +198,35 @@ def getColorMap(colors=('#C96868','#FADFA1','#FFF4EA','#7EACB5')):
     colors = [left,down,right,up,left]
     return col.LinearSegmentedColormap.from_list('myMap',colors,N=256,gamma=1.0)
 
+def drawFrame(function, center, extent, resolution, cmap, path, fname):
+    frame = Frame(function, center, extent, resolution).frame
+    fig, ax = plt.subplots(1)
+    ax.imshow(frame,
+              cmap = cmap,
+              norm = 'linear',
+              vmin = -np.pi,
+              vmax = np.pi,
+              interpolation = 'lanczos',
+              origin='lower')
+    ax.set_axis_off()
+    fig.savefig(f'{path}{fname}',
+                bbox_inches = 'tight',
+                pad_inches = 0,
+                metadata = {'Comment': function})
+    plt.close(fig)
+
 def createNewBestOfDir():
     runCount = 0
     path = f'../images/bestOf_{runCount}/'
+    while os.path.exists(path):
+        runCount += 1
+        path = f'../images/bestOf_{runCount}/'
+    os.makedirs(path)
+    return path
+
+def createNewZoomDir():
+    runCount = 0
+    path = f'../images/zoom_{runCount}/'
     while os.path.exists(path):
         runCount += 1
         path = f'../images/bestOf_{runCount}/'
@@ -269,3 +297,6 @@ def cleanUpBestOfDir(path,numberOfTops):
     paths = [path+fname for fname in os.listdir(path) if '.png' in fname]
     for p in paths:
         os.rename(p,p.replace('tmp','sample'))
+
+def makeGif(path):
+    pass

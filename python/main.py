@@ -1,7 +1,5 @@
 from lib import *
 from tqdm import tqdm
-import matplotlib.pyplot as plt
-import os
 
 class Draw():
 
@@ -18,6 +16,7 @@ class Draw():
                  maxFuncAtoms,
                  numberOfSamples = 100,
                  numberOfTops = 30,
+                 zoomFactor = 0.99,
                  colors=None):
 
         if colors:
@@ -34,6 +33,14 @@ class Draw():
                                 minFuncAtoms,
                                 maxFuncAtoms,
                                 numberOfTops)
+            case 'zoom':
+                self.drawZoom(center,
+                              extent,
+                              resolution,
+                              numberOfSamples,
+                              minFuncAtoms,
+                              maxFuncAtoms,
+                              zoomFactor)
             case _:
                 raise NameError(f'Unknown mode {mode}')
 
@@ -51,28 +58,40 @@ class Draw():
         for _ in tqdm(range(numberOfSamples)):
             fname = f'sample_{_}.png'
             function = encodeRandomFunction(np.random.randint(minFuncAtoms,maxFuncAtoms))
-            frame = Frame(function, center, extent, resolution).frame
-            fig, ax = plt.subplots(1)
-            ax.imshow(frame,
-                      cmap = self.cmap,
-                      norm = 'linear',
-                      vmin = -np.pi,
-                      vmax = np.pi,
-                      interpolation = 'lanczos',
-                      origin='lower')
-            ax.set_axis_off()
-            fig.savefig(f'{path}{fname}',
-                        bbox_inches = 'tight',
-                        pad_inches = 0,
-                        metadata = {'Comment': function})
-            plt.close(fig)
+            drawFrame(function, center, extent, resolution, self.cmap, path, fname)
 
         cleanUpBestOfDir(path,numberOfTops)
 
-center = (0,0)
-extent = 2
-resolution = 200
-minFuncAtoms = 2
-maxFuncAtoms = 10
+    def drawZoom(self,
+                 center,
+                 extent,
+                 resolution,
+                 numberOfSamples,
+                 minFuncAtoms,
+                 maxFuncAtoms,
+                 zoomFactor):
 
-Draw('bestOf',center,extent,resolution,minFuncAtoms,maxFuncAtoms)
+        path = createNewZoomDir()
+        while True:
+            function = encodeRandomFunction(np.random.randint(minFuncAtoms,maxFuncAtoms))
+            fname = 'sample_0.png'
+            drawFrame(function, center, extent, resolution, self.cmap, path, fname)
+            goodExample = input('Good example? (y/n): ')
+            if goodExample == 'y':
+                break
+
+        for _ in tqdm(range(numberOfSamples)):
+            fname = f'sample_{_}.png'
+            drawFrame(function, center, extent, resolution, self.cmap, path, fname)
+            extent = extent*zoomFactor
+
+        makeGif(path)
+
+center = (0,0)
+extent = 20
+resolution = 50
+minFuncAtoms = 6
+maxFuncAtoms = 9
+numberOfSamples = 500
+
+Draw('zoom',center,extent,resolution,minFuncAtoms,maxFuncAtoms,numberOfSamples)
