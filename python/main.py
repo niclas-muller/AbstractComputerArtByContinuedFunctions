@@ -14,9 +14,10 @@ class Draw():
                  resolution,
                  minFuncAtoms,
                  maxFuncAtoms,
-                 numberOfSamples = 100,
-                 numberOfTops = 30,
-                 zoomFactor = 0.99,
+                 function=None,
+                 numberOfSamples=100,
+                 numberOfTops=30,
+                 zoomFactor=0.95,
                  colors=None):
 
         if colors:
@@ -40,7 +41,8 @@ class Draw():
                               numberOfSamples,
                               minFuncAtoms,
                               maxFuncAtoms,
-                              zoomFactor)
+                              zoomFactor,
+                              zoomInto=function)
             case _:
                 raise NameError(f'Unknown mode {mode}')
 
@@ -53,7 +55,7 @@ class Draw():
                    maxFuncAtoms,
                    numberOfTops):
 
-        path = createNewBestOfDir()
+        path = createNewDir('bestOf')
 
         for _ in tqdm(range(numberOfSamples)):
             fname = f'sample_{_}.png'
@@ -69,29 +71,56 @@ class Draw():
                  numberOfSamples,
                  minFuncAtoms,
                  maxFuncAtoms,
-                 zoomFactor):
+                 zoomFactor,
+                 zoomInto=None):
 
-        path = createNewZoomDir()
-        while True:
-            function = encodeRandomFunction(np.random.randint(minFuncAtoms,maxFuncAtoms))
-            fname = 'sample_0.png'
-            drawFrame(function, center, extent, resolution, self.cmap, path, fname)
-            goodExample = input('Good example? (y/n): ')
-            if goodExample == 'y':
-                break
+        path = createNewDir('zoom')
 
+        if not zoomInto:
+            while True:
+                function = encodeRandomFunction(np.random.randint(minFuncAtoms,maxFuncAtoms))
+                fname = 'sample_0.png'
+                drawFrame(function, center, extent, resolution, self.cmap, path, fname)
+                goodExample = input('Good example? (y/n): ')
+                if goodExample == 'y':
+                    break
+        else:
+            function = zoomInto
+
+        frames = []
         for _ in tqdm(range(numberOfSamples)):
             fname = f'sample_{_}.png'
             drawFrame(function, center, extent, resolution, self.cmap, path, fname)
             extent = extent*zoomFactor
+            frames.append(f'{path}{fname}')
 
-        makeGif(path)
+        makeGif(path,frames)
+
+        for fname in [fname for fname in os.listdir(path) if 'png' in fname]:
+            os.remove(f'{path}/{fname}')
+
+        try:
+            zoomCount = max([int(fname.split('_')[1].split('.')[0]) for fname in os.listdir('../images/zooms')]) + 1
+        except IndexError:
+            zoomCount = 0
+
+        os.rename(f'{path}/zoom.gif',f'../images/zooms/zoom_{zoomCount}.gif')
+        os.rmdir(path)
 
 center = (0,0)
 extent = 20
-resolution = 50
-minFuncAtoms = 6
-maxFuncAtoms = 9
-numberOfSamples = 500
+resolution = 300
+minFuncAtoms = 2
+maxFuncAtoms = 10
+numberOfSamples = 360 # 360 for zooms and orbits
+testPath = '../images/bestOf_3/longtail/sample_356.png'
+function = getFunctionFromFrame(testPath)
 
-Draw('zoom',center,extent,resolution,minFuncAtoms,maxFuncAtoms,numberOfSamples)
+Draw('zoom',
+     center,
+     extent,
+     resolution,
+     minFuncAtoms,
+     maxFuncAtoms,
+     numberOfSamples=numberOfSamples,
+     function=function)

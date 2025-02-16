@@ -6,6 +6,7 @@ import pandas as pd
 import time
 import os
 import subprocess
+import imageio
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -215,21 +216,12 @@ def drawFrame(function, center, extent, resolution, cmap, path, fname):
                 metadata = {'Comment': function})
     plt.close(fig)
 
-def createNewBestOfDir():
+def createNewDir(dirType):
     runCount = 0
-    path = f'../images/bestOf_{runCount}/'
+    path = f'../images/{dirType}_{runCount}/'
     while os.path.exists(path):
         runCount += 1
-        path = f'../images/bestOf_{runCount}/'
-    os.makedirs(path)
-    return path
-
-def createNewZoomDir():
-    runCount = 0
-    path = f'../images/zoom_{runCount}/'
-    while os.path.exists(path):
-        runCount += 1
-        path = f'../images/bestOf_{runCount}/'
+        path = f'../images/{dirType}_{runCount}/'
     os.makedirs(path)
     return path
 
@@ -278,7 +270,7 @@ def cleanUpBestOfDir(path,numberOfTops):
     df['tot_rank'] = df[[col for col in df.columns if 'rank' in col]].sum(axis=1)
     df.tot_rank = df.tot_rank.rank(method='first')
     df = df.sort_values(by='tot_rank')
-    df.to_excel(f'FrameOverview_{bestOfCount}.xlsx')
+    df.to_excel(f'frameOverviews/FrameOverview_{bestOfCount}.xlsx')
 
     # move non-top-30 into new folder (olds) and rename top-30s
     longtailPath = path+'longtail'
@@ -298,5 +290,21 @@ def cleanUpBestOfDir(path,numberOfTops):
     for p in paths:
         os.rename(p,p.replace('tmp','sample'))
 
-def makeGif(path):
+def makeGif(path,frames):
+    images = []
+    for frame in frames:
+        images.append(imageio.imread(frame))
+
+    imageio.mimsave(f'{path}/zoom.gif',images,loop=0,fps=60)
+
+def getFunctionFromFrame(path):
+    rawInfo = subprocess.check_output(['identify', '-verbose', path])
+    rawInfo = str(rawInfo)
+    rawInfo = rawInfo.replace(' ','')
+    rawInfo = rawInfo.split('\\n')
+    rawInfo = [':'.join(e.split(':')[1:]) for e in rawInfo if e.split(':')[0] == 'Comment'][0]
+    return rawInfo
+
+def redrawFrame():
     pass
+    # todo: given a frame, redo it with other center/resolution/extent
