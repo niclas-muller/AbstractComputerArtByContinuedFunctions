@@ -305,6 +305,6 @@ def getFunctionFromFrame(path):
     rawInfo = [':'.join(e.split(':')[1:]) for e in rawInfo if e.split(':')[0] == 'Comment'][0]
     return rawInfo
 
-def redrawFrame():
-    pass
-    # todo: given a frame, redo it with other center/resolution/extent
+def redrawFrame(path,newPath,newFname,center,extent,resolution,cmap=getColorMap()):
+    function = getFunctionFromFrame(path)
+    drawFrame(function, center, extent, resolution, cmap, newPath, newFname)

@@ -31,7 +31,7 @@ fillHtmlHead();
 
 /* functionality behind changing the preview image on the landing page */
 function loadRandomPreview() {
-    let rnd = Math.floor(30*Math.random()) + 1;
+    let rnd = Math.floor(10*Math.random()) + 1;
     let path = "../../images/bestOf/frame_" + rnd + ".png";
     document.getElementById("imagePreview").src = path;
 }
@@ -61,3 +61,39 @@ function createFooter() {
 }
 
 createFooter();
+
+/* fill the sample images section on the gallery page */
+function fillSampleImages() {
+    const sampleImgsSec = document.getElementById("sampleImgs");
+    for (let i = 1; i <= 50; i++) {
+        let framePath = "../../images/bestOf/frame_" + i + ".png"
+        let tmpImg = document.createElement("img");
+        tmpImg.src = framePath;
+        sampleImgsSec.appendChild(tmpImg);
+    }
+}
+
+fillSampleImages();
+
+/* fill the zooms section on the gallery page */
+function fillZooms() {
+    const zoomsSec = document.getElementById("zooms");
+    for (let i = 1; i <= 6; i++) {
+        let framePath = "../../images/zooms/zoom_" + i + ".gif"
+        let tmpImg = document.createElement("img");
+        tmpImg.src = framePath;
+        zoomsSec.appendChild(tmpImg);
+    }
+}
+
+fillZooms();
+
+/* functions to make content of nav panel in gallery (in)-visible at mouseover */
+
+function makeNavVisible() {
+    document.getElementById("navContent").style.display = "block";
+}
+
+function makeNavInvisible() {
+    document.getElementById("navContent").style.display = "none";
+}

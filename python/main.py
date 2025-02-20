@@ -109,12 +109,13 @@ class Draw():
 
 center = (0,0)
 extent = 20
-resolution = 300
+resolution = 250
 minFuncAtoms = 2
 maxFuncAtoms = 10
 numberOfSamples = 360 # 360 for zooms and orbits
-testPath = '../images/bestOf_3/longtail/sample_356.png'
+testPath = '../images/bestOf/frame_41.png'
 function = getFunctionFromFrame(testPath)
+print(function)
 
 Draw('zoom',
      center,

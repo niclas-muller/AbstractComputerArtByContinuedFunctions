@@ -1,7 +1,8 @@
 body {
     font-family: "Courier New";
     background-color: rgba(209,182,210);
-    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 header, footer {
@@ -13,12 +14,14 @@ header, footer {
 
 #globContainer {
     max-width: 800px;
-    margin: auto;
+    margin: 0 auto;
+    text-align: center;
 }
 
 h1, h2 {
     font-family: "Helvetica";
     padding: 0.5rem;
+    text-align: center;
 }
 
 .headerBtn {
@@ -42,7 +45,7 @@ h1, h2 {
 }
 
 img {
-    width: 80%;
+    min-width: 80%;
     height: auto;
 }
 
@@ -59,4 +62,34 @@ img {
     text-align: center;
     display: flex;
     flex-direction: column;
+}
+
+.galleryDiv {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-gap: 1rem;
+    justify-content: space-evenly;
+}
+
+nav {
+    position: fixed;
+    display: block;
+    background-color: rgb(95,93,121);
+    color: white;
+    max-width: 9%;
+    height: auto;
+    margin-left: 0;
+}
+
+nav:hover {
+    border: solid;
+}
+
+#navContent {
+    display: none;
+}
+
+.navBtn {
+    color: white;
+    text-decoration: none;
 }

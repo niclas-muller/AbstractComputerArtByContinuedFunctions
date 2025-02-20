@@ -7,29 +7,32 @@
     </head>
 
     <body>
+        <nav onmouseover="makeNavVisible()" onmouseout="makeNavInvisible()"> 
+            Nav: <br>
+            <div id="navContent">
+            <a class="navBtn" href="#sampleImgs"> Best Offs </a> 
+            <a class="navBtn" href="#walks"> Walks </a> 
+            <a class="navBtn" href="#zooms"> Zooms </a> 
+            </div>
+        </nav> 
+
         <div id="globContainer">
 
-        <nav> This will become a navigational panel. </nav>
+        
+        <div id="nextToNav">
 
-        <section>
-
-        <h1> Sample images </h1>
-        <h2> Log of Lin <h2>
-        <h2> Log of Quad <h2>
-        <h2> Log of Cube <h2>
-        <h2> Log of Sin <h2>
+        <h1> Best Offs </h1>
+        <div class="galleryDiv" id='sampleImgs'>
+        </div>
         <h1> Walks </h1>
-        <h2> Log of Lin <h2>
-        <h2> Log of Quad <h2>
-        <h2> Log of Cube <h2>
-        <h2> Log of Sin <h2>
+        <div class="galleryDiv" id='walks'>
+        </div>
         <h1> Zooms </h1>
-        <h2> Log of Lin <h2>
-        <h2> Log of Quad <h2>
-        <h2> Log of Cube <h2>
-        <h2> Log of Sin <h2>
+        <div class="galleryDiv" id='zooms'>
+        </div>
 
-        </section>
+        </div>
+
         </div>
 
         <script src="../js/jsCode.js"></script>
