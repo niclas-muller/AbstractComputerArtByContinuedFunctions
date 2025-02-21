@@ -12,11 +12,10 @@ class Draw():
                  center,
                  extent,
                  resolution,
-                 minFuncAtoms,
-                 maxFuncAtoms,
+                 numberOfSamples,
+                 minFuncAtoms=2,
+                 maxFuncAtoms=10,
                  function=None,
-                 numberOfSamples=100,
-                 numberOfTops=30,
                  zoomFactor=0.95,
                  colors=None):
 
@@ -32,19 +31,24 @@ class Draw():
                                 resolution,
                                 numberOfSamples,
                                 minFuncAtoms,
-                                maxFuncAtoms,
-                                numberOfTops)
+                                maxFuncAtoms)
+                                
             case 'zoom':
                 self.drawZoom(center,
                               extent,
                               resolution,
                               numberOfSamples,
-                              minFuncAtoms,
-                              maxFuncAtoms,
                               zoomFactor,
-                              zoomInto=function)
+                              function)
+
+            case 'orbit':
+                self.drawOrbit(center,
+                               extent,
+                               resolution,
+                               numberOfSamples,
+                               function)
             case _:
-                raise NameError(f'Unknown mode {mode}')
+                raise NameError(f'Unknown mode *{mode}*')
 
     def drawBestOf(self,
                    center,
@@ -52,8 +56,7 @@ class Draw():
                    resolution,
                    numberOfSamples,
                    minFuncAtoms,
-                   maxFuncAtoms,
-                   numberOfTops):
+                   maxFuncAtoms):
 
         path = createNewDir('bestOf')
 
@@ -62,30 +65,17 @@ class Draw():
             function = encodeRandomFunction(np.random.randint(minFuncAtoms,maxFuncAtoms))
             drawFrame(function, center, extent, resolution, self.cmap, path, fname)
 
-        cleanUpBestOfDir(path,numberOfTops)
+        cleanUpBestOfDir(path)
 
     def drawZoom(self,
                  center,
                  extent,
                  resolution,
                  numberOfSamples,
-                 minFuncAtoms,
-                 maxFuncAtoms,
                  zoomFactor,
-                 zoomInto=None):
+                 function):
 
         path = createNewDir('zoom')
-
-        if not zoomInto:
-            while True:
-                function = encodeRandomFunction(np.random.randint(minFuncAtoms,maxFuncAtoms))
-                fname = 'sample_0.png'
-                drawFrame(function, center, extent, resolution, self.cmap, path, fname)
-                goodExample = input('Good example? (y/n): ')
-                if goodExample == 'y':
-                    break
-        else:
-            function = zoomInto
 
         frames = []
         for _ in tqdm(range(numberOfSamples)):
@@ -94,7 +84,7 @@ class Draw():
             extent = extent*zoomFactor
             frames.append(f'{path}{fname}')
 
-        makeGif(path,frames)
+        makeGif(path,frames,zoom)
 
         for fname in [fname for fname in os.listdir(path) if 'png' in fname]:
             os.remove(f'{path}/{fname}')
@@ -107,21 +97,51 @@ class Draw():
         os.rename(f'{path}/zoom.gif',f'../images/zooms/zoom_{zoomCount}.gif')
         os.rmdir(path)
 
+    def drawOrbit(self,
+                  center,
+                  extent,
+                  resolution,
+                  numberOfSamples,
+                  function):
+
+        path = createNewDir('orbit')
+
+        frames = []
+        for _ in tqdm(range(numberOfSamples)):
+            rotateBy = np.exp(1.j*(_/numberOfSamples)*(2*np.pi))
+            rotatedFunc = rotateFunctionForOrbit(function, rotateBy)
+            fname = f'sample_{_}.png'
+            drawFrame(rotatedFunc, center, extent, resolution, self.cmap, path, fname)
+            frames.append(f'{path}{fname}')
+
+        makeGif(path,frames,'orbit')
+
+        for fname in [fname for fname in os.listdir(path) if 'png' in fname]:
+            os.remove(f'{path}/{fname}')
+        '''
+        try:
+            zoomCount = max([int(fname.split('_')[1].split('.')[0]) for fname in os.listdir('../images/zooms')]) + 1
+        except IndexError:
+            zoomCount = 0
+
+        os.rename(f'{path}/zoom.gif',f'../images/zooms/zoom_{zoomCount}.gif')
+        os.rmdir(path)
+        '''
+
 center = (0,0)
 extent = 20
-resolution = 250
+resolution = 100
 minFuncAtoms = 2
 maxFuncAtoms = 10
 numberOfSamples = 360 # 360 for zooms and orbits
-testPath = '../images/bestOf/frame_41.png'
+testPath = '../images/bestOf/frame_21.png'
 function = getFunctionFromFrame(testPath)
-print(function)
 
-Draw('zoom',
+Draw('orbit',
      center,
      extent,
      resolution,
-     minFuncAtoms,
-     maxFuncAtoms,
-     numberOfSamples=numberOfSamples,
+     #minFuncAtoms,
+     #maxFuncAtoms,
+     numberOfSamples,
      function=function)
