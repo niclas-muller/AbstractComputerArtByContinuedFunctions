@@ -72,7 +72,6 @@ function fillSampleImages() {
         sampleImgsSec.appendChild(tmpImg);
     }
 }
-
 fillSampleImages();
 
 /* fill the zooms section on the gallery page */
@@ -85,8 +84,19 @@ function fillZooms() {
         zoomsSec.appendChild(tmpImg);
     }
 }
-
 fillZooms();
+
+/* fill the walks section on the gallery page */
+function fillWalks() {
+    const walksSec = document.getElementById("walks");
+    for (let i = 1; i <= 4; i++) {
+        let framePath = "../../images/orbits/orbit_" + i + ".gif"
+        let tmpImg = document.createElement("img");
+        tmpImg.src = framePath;
+        walksSec.appendChild(tmpImg);
+    }
+}
+fillWalks();
 
 /* functions to make content of nav panel in gallery (in)-visible at mouseover */
 

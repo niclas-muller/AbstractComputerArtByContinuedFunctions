@@ -118,23 +118,22 @@ class Draw():
 
         for fname in [fname for fname in os.listdir(path) if 'png' in fname]:
             os.remove(f'{path}/{fname}')
-        '''
+        
         try:
-            zoomCount = max([int(fname.split('_')[1].split('.')[0]) for fname in os.listdir('../images/zooms')]) + 1
-        except IndexError:
-            zoomCount = 0
+            orbitCount = max([int(fname.split('_')[1].split('.')[0]) for fname in os.listdir('../images/orbits')]) + 1
+        except ValueError:
+            orbitCount = 0
 
-        os.rename(f'{path}/zoom.gif',f'../images/zooms/zoom_{zoomCount}.gif')
+        os.rename(f'{path}/orbit.gif',f'../images/orbits/orbit_{orbitCount}.gif')
         os.rmdir(path)
-        '''
 
 center = (0,0)
-extent = 20
-resolution = 100
+extent = 1
+resolution = 400
 minFuncAtoms = 2
 maxFuncAtoms = 10
 numberOfSamples = 360 # 360 for zooms and orbits
-testPath = '../images/bestOf/frame_21.png'
+testPath = '../images/bestOf/frame_28.png'
 function = getFunctionFromFrame(testPath)
 
 Draw('orbit',
