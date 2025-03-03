@@ -1,5 +1,7 @@
 /* load common elements (stylesheet,etc.) into head */
 
+fillHtmlHead();
+
 function fillHtmlHead() {
     let styleSheetInclude = document.createElement('link');
     styleSheetInclude.rel = 'stylesheet';
@@ -27,8 +29,6 @@ function fillHtmlHead() {
     document.head.appendChild(viewportSettings);
 }
 
-fillHtmlHead();
-
 /* functionality behind changing the preview image on the landing page */
 function loadRandomPreview() {
     let rnd = Math.floor(10*Math.random()) + 1;
@@ -37,6 +37,9 @@ function loadRandomPreview() {
 }
 
 /* create the header element */
+
+createHeader();
+
 function createHeader() {
     const headerObj = document.createElement("header");
     headerObj.id = "cmnHeader";
@@ -49,20 +52,29 @@ function createHeader() {
     document.getElementById("headerNavDiv").innerHTML += "<a id='createBtn' class='headerBtn' href='create.html'> <i class='bi bi-brush'></i> Create </a>";
 }
 
-createHeader();
-
 /* create the footer element */
-function createFooter() {
-    const footerObj = document.createElement("footer");
-    footerObj.id = "cmnFooter";
-    document.body.insertBefore(footerObj, document.body.lastChild);
-    document.getElementById("cmnFooter").innerHTML = "<hr/>";
-    document.getElementById("cmnFooter").innerHTML += "<p> I am a footer! I contain a subscribe link (newsletter), a darkmode switch, ... </p>";
-}
 
 createFooter();
 
+function createFooter() {
+    const footerObj = document.createElement("footer");
+    footerObj.id = "cmnFooter";
+    let subscribeLink = document.createElement("a");
+    let darkmodeSwitch = document.createElement("a");
+    let footerTitle = document.createElement("p");
+    subscribeLink.className = "headerBtn";
+    darkmodeSwitch.className = "headerBtn";
+    subscribeLink.innerHTML = "I am a subscription link!";
+    darkmodeSwitch.innerHTML = "I am a darkmode switch!";
+    footerTitle.innerHTML = "I am a footer title!";
+    footerObj.appendChild(footerTitle);
+    footerObj.appendChild(subscribeLink);
+    footerObj.appendChild(darkmodeSwitch);
+    document.body.insertBefore(footerObj, document.body.lastChild);
+}
+
 /* fill the sample images section on the gallery page */
+
 function fillSampleImages() {
     const sampleImgsSec = document.getElementById("sampleImgs");
     for (let i = 1; i <= 50; i++) {
@@ -72,9 +84,9 @@ function fillSampleImages() {
         sampleImgsSec.appendChild(tmpImg);
     }
 }
-fillSampleImages();
 
 /* fill the zooms section on the gallery page */
+
 function fillZooms() {
     const zoomsSec = document.getElementById("zooms");
     for (let i = 1; i <= 6; i++) {
@@ -84,9 +96,9 @@ function fillZooms() {
         zoomsSec.appendChild(tmpImg);
     }
 }
-fillZooms();
 
 /* fill the walks section on the gallery page */
+
 function fillWalks() {
     const walksSec = document.getElementById("walks");
     for (let i = 1; i <= 4; i++) {
@@ -96,7 +108,6 @@ function fillWalks() {
         walksSec.appendChild(tmpImg);
     }
 }
-fillWalks();
 
 /* functions to make content of nav panel in gallery (in)-visible at mouseover */
 
@@ -106,4 +117,10 @@ function makeNavVisible() {
 
 function makeNavInvisible() {
     document.getElementById("navContent").style.display = "none";
+}
+
+if (document.URL.split('/').slice(-1)[0] == "gallery.html") {
+    fillSampleImages();
+    fillZooms();
+    fillWalks();
 }
