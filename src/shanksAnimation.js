@@ -1,10 +1,11 @@
 /* Create a canvas holding an animation of the shanks process */
 
 const outerCont = document.getElementById("shanksAnimation");
-outerCont.style.border = 'solid black';
+outerCont.className = "border m-2 rounded-md shadow-md bg-amber-100 text-center";
 
 let aniBtn = document.createElement('button');
 aniBtn.type = "button";
+aniBtn.className = "border rounded-lg m-2 p-1 bg-indigo-700 text-white cursor-pointer hover:shadow-xl transition-shadow duration-100";
 aniBtn.innerHTML = "Click me to (re)-start animation";
 aniBtn.addEventListener("click",animate);
 outerCont.appendChild(aniBtn)
@@ -18,9 +19,7 @@ for (let i=0; i<=numCols; i++) {
     outerCont.appendChild(cont);
     for (let j=1; j<numCols-2*i+1; j++) {
         let box = document.createElement('div');
-        box.style.display = 'inline-block';
-        box.style.margin = '1em';
-        box.style.padding = '0.1em';
+        box.className = "inline-block m-1 p-1 w-10 h-auto text-center";
         cont.appendChild(box);
         row.push(box);
     }
@@ -30,7 +29,7 @@ for (let i=0; i<=numCols; i++) {
 let interval = 500;
 
 function _fill(row,col) {
-    rows[row][col].style.border = 'solid black';
+    rows[row][col].className = "inline-block m-1 p-1 border rounded-sm w-10 h-auto text-center";
     let content = "";
     if (row == 0) {
         content += "z<sub>"+col+"</sub>";
@@ -46,7 +45,7 @@ function fill(row,col) {
 }
 
 function highlight(row,col) {
-    rows[row][col].style.border = 'solid red';
+    rows[row][col].className = "inline-block m-1 p-1 border-4 border-red-900 rounded-sm w-10 h-auto text-center";
 }
 
 let count = 1;

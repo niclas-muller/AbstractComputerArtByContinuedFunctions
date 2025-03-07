@@ -5,13 +5,13 @@ fillHtmlHead();
 function fillHtmlHead() {
     let styleSheetInclude = document.createElement('link');
     styleSheetInclude.rel = 'stylesheet';
-    styleSheetInclude.href =  '../css/styles.css';
+    styleSheetInclude.href =  'output.css';
     document.head.appendChild(styleSheetInclude);
 
     let favIconInclude = document.createElement('link');
     favIconInclude.rel = 'icon';
     favIconInclude.type = 'image/x-icon';
-    favIconInclude.href = '../../images/favicon.png';
+    favIconInclude.href = '../images/favicon.png';
     document.head.appendChild(favIconInclude);
 
     let iconInclude = document.createElement('link');
@@ -32,7 +32,7 @@ function fillHtmlHead() {
 /* functionality behind changing the preview image on the landing page */
 function loadRandomPreview() {
     let rnd = Math.floor(10*Math.random()) + 1;
-    let path = "../../images/bestOf/frame_" + rnd + ".png";
+    let path = "../images/bestOf/frame_" + rnd + ".png";
     document.getElementById("imagePreview").src = path;
 }
 
@@ -41,15 +41,36 @@ function loadRandomPreview() {
 createHeader();
 
 function createHeader() {
-    const headerObj = document.createElement("header");
+    const headerObj = document.createElement("div");
+    headerObj.className = "sticky top-0 w-full mb-3 text-center bg-amber-200 shadow";
     headerObj.id = "cmnHeader";
+
+    const headline = document.createElement("h1");
+    headline.innerHTML = "Abstract Computer Art by Continued Functions";
+    headline.className = "text-2xl font-bold mb-2";
+    headerObj.appendChild(headline)
+
+    const btnContainer = document.createElement("div");
+    btnContainer.className = "flex justify-center";
+
+    function addButton(btnId, btnHref, btnContent) {
+        tmpDiv = document.createElement("div");
+        tmpDiv.className = "m-3 p-1 border rounded-md hover:bg-indigo-600 hover:text-white transition-colors duration-600";
+        tmpBtn = document.createElement("a");
+        tmpBtn.id = btnId;
+        tmpBtn.href = btnHref;
+        tmpBtn.innerHTML = btnContent;
+        tmpDiv.appendChild(tmpBtn);
+        btnContainer.appendChild(tmpDiv);
+    }
+    addButton('mainBtn', 'main.html', "<i class='bi bi-house'></i> Home ");
+    addButton('galleryBtn', 'gallery.html', "<i class='bi bi-collection'></i> Gallery ");
+    addButton('theoryBtn', 'theory.html', "<i class='bi bi-eyeglasses'></i> Theory ");
+    addButton('createBtn', 'create.html', "<i class='bi bi-brush'></i> Create ");
+
+    headerObj.appendChild(btnContainer)
+
     document.body.insertBefore(headerObj, document.body.firstChild)
-    document.getElementById("cmnHeader").innerHTML = "<h1> Abstract Computer Art by Continued Functions </h1>";
-    document.getElementById("cmnHeader").innerHTML += "<div id = 'headerNavDiv'></div>";
-    document.getElementById("headerNavDiv").innerHTML += "<a id='homeBtn' class='headerBtn' href='main.html'> <i class='bi bi-house'></i> Home </a>";
-    document.getElementById("headerNavDiv").innerHTML += "<a id='galleryBtn' class='headerBtn' href='gallery.html'> <i class='bi bi-collection'></i> Gallery </a>";
-    document.getElementById("headerNavDiv").innerHTML += "<a id='theoryBtn' class='headerBtn' href='theory.html'> <i class='bi bi-eyeglasses'></i> Theory </a>";
-    document.getElementById("headerNavDiv").innerHTML += "<a id='createBtn' class='headerBtn' href='create.html'> <i class='bi bi-brush'></i> Create </a>";
 }
 
 /* create the footer element */
@@ -59,11 +80,10 @@ createFooter();
 function createFooter() {
     const footerObj = document.createElement("footer");
     footerObj.id = "cmnFooter";
+    footerObj.className = "text-center";
     let subscribeLink = document.createElement("a");
     let darkmodeSwitch = document.createElement("a");
     let footerTitle = document.createElement("p");
-    subscribeLink.className = "headerBtn";
-    darkmodeSwitch.className = "headerBtn";
     subscribeLink.innerHTML = "I am a subscription link!";
     darkmodeSwitch.innerHTML = "I am a darkmode switch!";
     footerTitle.innerHTML = "I am a footer title!";
@@ -78,9 +98,10 @@ function createFooter() {
 function fillSampleImages() {
     const sampleImgsSec = document.getElementById("sampleImgs");
     for (let i = 1; i <= 50; i++) {
-        let framePath = "../../images/bestOf/frame_" + i + ".png"
+        let framePath = "../images/bestOf/frame_" + i + ".png"
         let tmpImg = document.createElement("img");
         tmpImg.src = framePath;
+        tmpImg.className = "mx-auto m-2";
         sampleImgsSec.appendChild(tmpImg);
     }
 }
@@ -90,9 +111,10 @@ function fillSampleImages() {
 function fillZooms() {
     const zoomsSec = document.getElementById("zooms");
     for (let i = 1; i <= 6; i++) {
-        let framePath = "../../images/zooms/zoom_" + i + ".gif"
+        let framePath = "../images/zooms/zoom_" + i + ".gif"
         let tmpImg = document.createElement("img");
         tmpImg.src = framePath;
+        tmpImg.className = "mx-auto m-2";
         zoomsSec.appendChild(tmpImg);
     }
 }
@@ -102,21 +124,12 @@ function fillZooms() {
 function fillWalks() {
     const walksSec = document.getElementById("walks");
     for (let i = 1; i <= 4; i++) {
-        let framePath = "../../images/orbits/orbit_" + i + ".gif"
+        let framePath = "../images/orbits/orbit_" + i + ".gif"
         let tmpImg = document.createElement("img");
         tmpImg.src = framePath;
+        tmpImg.className = "mx-auto m-2";
         walksSec.appendChild(tmpImg);
     }
-}
-
-/* functions to make content of nav panel in gallery (in)-visible at mouseover */
-
-function makeNavVisible() {
-    document.getElementById("navContent").style.display = "block";
-}
-
-function makeNavInvisible() {
-    document.getElementById("navContent").style.display = "none";
 }
 
 if (document.URL.split('/').slice(-1)[0] == "gallery.html") {
@@ -124,3 +137,8 @@ if (document.URL.split('/').slice(-1)[0] == "gallery.html") {
     fillZooms();
     fillWalks();
 }
+
+/* style button corresponding to active page */
+
+let btnName = document.URL.split('/').slice(-1)[0].split('.')[0] + 'Btn';
+document.getElementById(btnName).className = "font-bold shadow-lg";
