@@ -1,3 +1,7 @@
+/* set global style elements*/
+
+document.body.className = "font-mono bg-zinc-200 max-w-6xl mx-auto";
+
 /* load common elements (stylesheet,etc.) into head */
 
 fillHtmlHead();
@@ -47,7 +51,7 @@ function createHeader() {
 
     const headline = document.createElement("h1");
     headline.innerHTML = "Abstract Computer Art by Continued Functions";
-    headline.className = "text-2xl font-bold mb-2";
+    headline.className = "text-2xl font-bold mb-2 pt-2";
     headerObj.appendChild(headline)
 
     const btnContainer = document.createElement("div");
@@ -55,7 +59,7 @@ function createHeader() {
 
     function addButton(btnId, btnHref, btnContent) {
         tmpDiv = document.createElement("div");
-        tmpDiv.className = "m-3 p-1 border rounded-md hover:bg-indigo-600 hover:text-white transition-colors duration-600";
+        tmpDiv.className = "m-3 p-2 border-2 rounded-md hover:bg-indigo-600 hover:text-white transition-colors duration-600";
         tmpBtn = document.createElement("a");
         tmpBtn.id = btnId;
         tmpBtn.href = btnHref;
@@ -78,9 +82,9 @@ function createHeader() {
 createFooter();
 
 function createFooter() {
-    const footerObj = document.createElement("footer");
+    const footerObj = document.createElement("div");
+    footerObj.className = "sticky bot-0 w-full mt-3 text-center bg-amber-200 shadow";
     footerObj.id = "cmnFooter";
-    footerObj.className = "text-center";
     let subscribeLink = document.createElement("a");
     let darkmodeSwitch = document.createElement("a");
     let footerTitle = document.createElement("p");
@@ -141,4 +145,5 @@ if (document.URL.split('/').slice(-1)[0] == "gallery.html") {
 /* style button corresponding to active page */
 
 let btnName = document.URL.split('/').slice(-1)[0].split('.')[0] + 'Btn';
-document.getElementById(btnName).className = "font-bold shadow-lg";
+document.getElementById(btnName).className = "font-bold";
+document.getElementById(btnName).parentNode.className = "m-3 p-2 border-4 rounded-md hover:bg-indigo-600 hover:text-white transition-colors duration-600";

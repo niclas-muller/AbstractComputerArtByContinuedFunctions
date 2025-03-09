@@ -1,4 +1,5 @@
 /* Create a canvas holding an animation of the shanks process */
+alert(window.innerWidth);
 
 const outerCont = document.getElementById("shanksAnimation");
 outerCont.className = "border m-2 rounded-md shadow-md bg-amber-100 text-center";
@@ -48,8 +49,19 @@ function highlight(row,col) {
     rows[row][col].className = "inline-block m-1 p-1 border-4 border-red-900 rounded-sm w-10 h-auto text-center";
 }
 
+function clearAll() {
+    for (let i=0; i<=numCols; i++) {
+        for (let j=1; j<numCols-2*i+1; j++) {
+            rows[i][j-1].innerHTML = "";
+            rows[i][j-1].className = "";
+        }
+    }
+}
+
 let count = 1;
 function animate() {
+    count = 1;
+    clearAll();
     fill(0,0);
     fill(0,1);
     fill(0,2);
