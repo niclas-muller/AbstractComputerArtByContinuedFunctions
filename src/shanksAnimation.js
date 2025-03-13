@@ -1,5 +1,5 @@
 /* Create a canvas holding an animation of the shanks process */
-alert(window.innerWidth);
+let numCols = 9
 
 const outerCont = document.getElementById("shanksAnimation");
 outerCont.className = "border m-2 rounded-md shadow-md bg-amber-100 text-center";
@@ -12,7 +12,6 @@ aniBtn.addEventListener("click",animate);
 outerCont.appendChild(aniBtn)
 
 const rows = [];
-let numCols = 9
 for (let i=0; i<=numCols; i++) {
     const row = [];
     let cont = document.createElement('div');
@@ -20,7 +19,7 @@ for (let i=0; i<=numCols; i++) {
     outerCont.appendChild(cont);
     for (let j=1; j<numCols-2*i+1; j++) {
         let box = document.createElement('div');
-        box.className = "inline-block m-1 p-1 w-10 h-auto text-center";
+        box.className = "inline-block m-0.5 p-1.2 w-9 h-auto text-center";
         cont.appendChild(box);
         row.push(box);
     }
@@ -30,7 +29,7 @@ for (let i=0; i<=numCols; i++) {
 let interval = 500;
 
 function _fill(row,col) {
-    rows[row][col].className = "inline-block m-1 p-1 border rounded-sm w-10 h-auto text-center";
+    rows[row][col].className = "inline-block m-0.5 p-1.2 border rounded-sm w-9 h-auto text-center";
     let content = "";
     if (row == 0) {
         content += "z<sub>"+col+"</sub>";
@@ -46,7 +45,7 @@ function fill(row,col) {
 }
 
 function highlight(row,col) {
-    rows[row][col].className = "inline-block m-1 p-1 border-4 border-red-900 rounded-sm w-10 h-auto text-center";
+    rows[row][col].className = "inline-block m-0.5 p-1.2 border-4 border-red-900 rounded-sm w-9 h-auto text-center";
 }
 
 function clearAll() {

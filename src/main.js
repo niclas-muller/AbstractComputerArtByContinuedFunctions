@@ -105,7 +105,7 @@ function fillSampleImages() {
         let framePath = "../images/bestOf/frame_" + i + ".png"
         let tmpImg = document.createElement("img");
         tmpImg.src = framePath;
-        tmpImg.className = "mx-auto m-2";
+        tmpImg.className = "mx-auto m-2 max-w-full";
         sampleImgsSec.appendChild(tmpImg);
     }
 }
@@ -118,7 +118,7 @@ function fillZooms() {
         let framePath = "../images/zooms/zoom_" + i + ".gif"
         let tmpImg = document.createElement("img");
         tmpImg.src = framePath;
-        tmpImg.className = "mx-auto m-2";
+        tmpImg.className = "mx-auto m-2 max-w-full";
         zoomsSec.appendChild(tmpImg);
     }
 }
@@ -131,7 +131,7 @@ function fillWalks() {
         let framePath = "../images/orbits/orbit_" + i + ".gif"
         let tmpImg = document.createElement("img");
         tmpImg.src = framePath;
-        tmpImg.className = "mx-auto m-2";
+        tmpImg.className = "mx-auto m-2 max-w-full";
         walksSec.appendChild(tmpImg);
     }
 }
