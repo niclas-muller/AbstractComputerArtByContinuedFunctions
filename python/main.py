@@ -129,18 +129,17 @@ class Draw():
 
 center = (0,0)
 extent = 1
-resolution = 400
-minFuncAtoms = 2
-maxFuncAtoms = 10
-numberOfSamples = 360 # 360 for zooms and orbits
+resolution = 100
+minFuncAtoms = 10
+maxFuncAtoms = 100
+numberOfSamples = 1000 # 360 for zooms and orbits
 testPath = '../images/bestOf/frame_28.png'
 function = getFunctionFromFrame(testPath)
 
-Draw('orbit',
+Draw('bestOf',
      center,
      extent,
      resolution,
-     #minFuncAtoms,
-     #maxFuncAtoms,
      numberOfSamples,
-     function=function)
+     minFuncAtoms,
+     maxFuncAtoms)
